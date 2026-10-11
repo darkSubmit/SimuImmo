@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simulateur crédit immo & reste à vivre</title>
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--ink:#14212b;--mute:#5b6b78;--line:#d5dce2;--main:#0f766e;--alt:#7f97a3;--target:#c0392b;--ok:#166534;--ko:#b91c1c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+header{padding:20px 24px 4px;max-width:1200px;margin:auto}
+h1{font-size:1.25rem;margin:0}header p{margin:2px 0 0;color:var(--mute);font-size:.85rem}
+.wrap{display:grid;gap:16px;padding:16px 24px 32px;max-width:1200px;margin:auto}
+@media(min-width:900px){.wrap{grid-template-columns:340px 1fr;align-items:start}aside{position:sticky;top:12px}}
+aside,.card,.hero{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+fieldset{border:0;padding:0;margin:0 0 14px}legend{font-weight:650;padding:0;margin-bottom:6px}
+.row{display:grid;grid-template-columns:1fr auto;gap:2px 8px;margin-bottom:8px;align-items:center}
+.row label{font-size:.85rem;color:var(--mute)}.row input[type=range]{grid-column:1/3;width:100%;accent-color:var(--main);margin:0}
+.num{display:flex;align-items:center;gap:4px}.num i{font-style:normal;color:var(--mute);font-size:.8rem;width:22px}
+.num input{width:92px;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit;text-align:right}
+.seg{display:flex;margin-bottom:6px}.seg button{flex:1;padding:5px;border:1px solid var(--line);background:#f6f8fa;font:inherit;font-size:.82rem;cursor:pointer}
+.seg button:first-child{border-radius:5px 0 0 5px}.seg button:last-child{border-radius:0 5px 5px 0;border-left:0}
+.seg button.on{background:var(--main);color:#fff;border-color:var(--main)}
+.hint{font-size:.8rem;color:var(--mute);margin:-2px 0 8px}
+/*ap*/.ap{display:grid;grid-template-columns:1fr 96px 26px;gap:6px;margin-bottom:6px}.ap input{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit}.ap input[type=number]{text-align:right}.ap button,.add{border:1px solid var(--line);background:#f6f8fa;border-radius:5px;cursor:pointer;font:inherit}.add{width:100%;padding:5px;margin-bottom:8px}.tot{display:flex;justify-content:space-between;font-weight:650}.taeg{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}.taeg strong{font-size:1.15rem;color:var(--main)}
+[hidden]{display:none!important}
+.tabs{display:flex;gap:6px;max-width:1200px;margin:10px auto 0;padding:0 24px}.tabs button{padding:8px 16px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:#e2e8ec;font:inherit;font-weight:600;color:var(--mute);cursor:pointer}.tabs button.on{background:var(--panel);color:var(--main)}
+@media(min-width:900px){#p2{grid-template-columns:1fr 340px}#p2 aside{order:2}}
+#p2 main section{padding:12px 16px}h2 span{float:right;color:var(--mute);font-weight:500}
+.bar{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--line);margin:12px 0}.bar i{display:block;height:100%}
+.leg div{display:grid;grid-template-columns:12px 1fr auto 58px;gap:6px;align-items:center;font-size:.82rem;padding:2px 0}.leg i{width:10px;height:10px;border-radius:2px}.leg em{font-style:normal;color:var(--mute);text-align:right}
+.chk{display:flex;gap:6px;margin:12px 0 4px;font-size:.88rem}
+.ap3{display:grid;grid-template-columns:1fr 96px 84px 26px;gap:6px;margin-bottom:6px}.ap3 input,.ap3 select{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit;background:#fff}.ap3 input[type=number]{text-align:right}.ap3 button{border:1px solid var(--line);background:#f6f8fa;border-radius:5px;cursor:pointer;font:inherit}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.names input{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit}
+.pp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.pb{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.pb h3{margin:0;font-size:.9rem}.pv{font-size:1.35rem;font-weight:700;color:var(--main)}.pv.ko{color:var(--ko)}.pb .bar{margin:8px 0}.pb .leg div{grid-template-columns:12px 1fr auto;font-size:.74rem}
+.io{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.io button{padding:6px 12px;border:1px solid var(--line);background:var(--panel);border-radius:6px;font:inherit;font-size:.85rem;cursor:pointer}.io span{font-size:.8rem;color:var(--mute)}body.drag{outline:3px dashed var(--main);outline-offset:-8px}
+#reset,#reset2{width:100%;padding:7px;border:1px solid var(--line);background:#f6f8fa;border-radius:5px;font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--main);outline-offset:2px}
+.hero .big{font-size:clamp(2rem,5vw,2.9rem);font-weight:700;line-height:1.1;color:var(--main)}
+.hero p{margin:6px 0 0}.mute{color:var(--mute)}
+.ok{color:var(--ok);font-weight:600}.ko{color:var(--ko);font-weight:600}
+main{display:grid;gap:16px}h2{font-size:1rem;margin:0 0 8px}
+#chart{position:relative}svg{width:100%;display:block;touch-action:pan-y}
+svg text{font-size:11px;fill:var(--mute)}
+#tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;border-radius:6px;padding:6px 9px;font-size:.78rem;line-height:1.5;display:none;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.8rem;color:var(--mute);margin-top:6px}
+.legend b{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:middle;margin-right:5px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.kpi span{display:block;font-size:.8rem;color:var(--mute)}.kpi strong{font-size:1.2rem}.kpi small{display:block;font-size:.78rem}
+.note{font-size:.8rem;color:var(--mute);margin:0}
+</style>
+</head>
+<body>
+<header><h1>Simulateur crédit immobilier & reste à vivre</h1><p>Tout est calculé dans ton navigateur. Charge ta sauvegarde JSON pour remplir les champs.</p><div class="io"><button type="button" id="save">Enregistrer en JSON</button><button type="button" id="load">Charger un JSON</button><input type="file" id="file" accept=".json,application/json" hidden><span id="msg">Rien n'est envoyé ni stocké : le fichier reste sur ton ordinateur (tu peux aussi le glisser sur la page).</span></div>
+</header>
+<nav class="tabs"><button type="button" class="on" data-t="1">Capacité d'achat</button><button type="button" data-t="2">Reste à vivre</button></nav>
+<div class="wrap" id="p1">
+<aside><div id="inputs"></div><button id="reset" type="button">Réinitialiser les valeurs</button></aside>
+<main>
+<section class="hero"><div class="mute">Capacité d'achat</div><div class="big" id="cap"></div><p id="verdict"></p><p class="mute" id="bind"></p></section>
+<section class="card"><h2>Capacité d'achat selon le taux</h2><div id="chart"><div id="tip"></div></div>
+<div class="legend"><span><b style="border-color:var(--main)"></b>Apport actuel</span><span><b style="border-color:var(--alt);border-top-style:dashed"></b>Apport ±50 000 €</span><span><b style="border-color:var(--target);border-top-style:dashed"></b>Prix visé</span></div></section>
+<section class="kpis" id="kpis"></section>
+<p class="note">Hypothèses : TAEG = taux nominal + assurance emprunteur (assurance calculée sur le capital initial) ; frais de garantie de 1,05 % financés dans le prêt ; mensualité maximale = taux d'endettement max × revenus nets avant impôts. Simulation indicative, pas une offre de prêt.</p>
+</main>
+</div>
+<div class="wrap" id="p2" hidden>
+<aside><div class="mute">Reste à vivre mensuel du foyer</div><div class="hero"><div class="big" id="rav" style="border:0;padding:0"></div></div><p class="mute" id="ravsub"></p>
+<div class="pp" id="pp"></div>
+<label class="chk"><input type="checkbox" id="inc" checked> Inclure la mensualité du crédit</label><p class="hint" id="credinfo"></p><p class="hint" id="pre"></p>
+<fieldset style="margin-top:10px"><legend>Répartition (part de <span class="nB"></span>)</legend>
+<div class="names"><input id="nmB" aria-label="Prénom de la première personne" placeholder="Personne 1"><input id="nmM" aria-label="Prénom de la seconde personne" placeholder="Personne 2"></div>
+<div class="row"><label>Dépenses « Commun »</label><span class="num"><input type="number" min="0" max="100" step="1" value="50" data-sh="c"><i>%</i></span><input type="range" min="0" max="100" step="1" value="50" data-sh="c" aria-label="Part de la première personne dans les dépenses communes"></div>
+<div class="row"><label>Mensualité du crédit</label><span class="num"><input type="number" min="0" max="100" step="1" value="50" data-sh="k"><i>%</i></span><input type="range" min="0" max="100" step="1" value="50" data-sh="k" aria-label="Part de la première personne dans le crédit"></div></fieldset>
+<button id="reset2" type="button">Réinitialiser les dépenses</button>
+<p class="note" style="margin-top:10px">Chaque ligne est attribuée à une personne ou à « Commun » (réparti selon les parts ci-dessus). Montants mensuels. Pour le crédit, la mensualité vient de l'onglet « Capacité d'achat ».</p></aside>
+<main id="lists"></main>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const eur=v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);
+const pct=v=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(v)+' %';
+const D={prix:0,duree:25,nominal:4,assur:0.3,notaire:8,rev_brut:0,endet_max:35,ap:[]};
+const G=1.05; // frais de garantie financés (% du prêt)
+const S=structuredClone(D);
+let MENS=0;
+
+const pmtf=(r,n)=>r===0?1/n:(r/12)/(1-Math.pow(1+r/12,-n)); // mensualité par € emprunté, hors assurance
+const taeg=()=>S.nominal+S.assur;
+const nominalOf=x=>Math.max(0,x-S.assur)/100; // TAEG (%) -> taux nominal décimal
+function cap(nom,ap){
+  const N=Math.max(1,S.duree)*12,m=pmtf(nom,N)+S.assur/1200;
+  const mens=S.endet_max/100*S.rev_brut,need=mens/m/(1+G/100);
+  return {prix:(need+Math.max(0,ap))/(1+S.notaire/100)};
+}
+function maxRate(){ // TAEG max permettant d'acheter au prix visé
+  const f=x=>cap(nominalOf(x),S.apport).prix;
+  if(f(0.1)<S.prix)return null;if(f(15)>=S.prix)return 15;
+  let lo=0.1,hi=15;for(let k=0;k<30;k++){const m=(lo+hi)/2;f(m)>=S.prix?lo=m:hi=m}return lo;
+}
+
+const row=([id,l,u,a,b,s])=>`<div class="row"><label for="n_${id}">${l}</label><span class="num"><input id="n_${id}" type="number" step="${s}" value="${S[id]}"><i>${u}</i></span><input id="r_${id}" type="range" min="${a}" max="${b}" step="${s}" value="${S[id]}" aria-label="${l}"></div>`;
+const fs=(g,rows,pre='')=>`<fieldset>${g?`<legend>${g}</legend>`:''}${pre}${rows.map(row).join('')}</fieldset>`;
+function build(){
+  $('inputs').innerHTML=
+    fs('Projet',[['prix','Prix du bien','€',0,800000,5000],['duree','Durée','ans',10,30,1]])+
+    fs('Taux',[['nominal','Taux nominal','%',0.5,7,0.01],['assur','Assurance emprunteur (par an)','%',0,0.6,0.01]],'<div class="taeg"><span class="mute">TAEG (taux nominal + assurance)</span><strong id="taegv"></strong></div>').replace(/<\/fieldset>$/,'<div class="hint">Moyenne 2026 : 0,15 à 0,40 % du capital selon l\'âge (environ 0,10 % à 30 ans, 0,20 % à 40 ans, 0,40 % à 50 ans).</div></fieldset>')+
+    '<fieldset><legend>Apport</legend><div id="aplist"></div><button class="add" type="button" data-act="add">+ Ajouter une somme</button><div class="tot"><span>Apport total</span><span id="aptot"></span></div></fieldset>'+
+    fs('',[['notaire','Frais de notaire','%',0,10,0.1]])+
+    fs('Foyer (par mois)',[['rev_brut','Revenus nets avant impôts','€',0,10000,50],['endet_max',"Taux d'endettement max",'%',20,40,0.5]]);
+  renderAp();
+}
+function renderAp(){
+  $('aplist').innerHTML=S.ap.map((a,i)=>`<div class="ap"><input data-ap="l" data-i="${i}" value="${a.l.replace(/"/g,'&quot;')}" placeholder="Libellé" aria-label="Libellé"><input data-ap="v" data-i="${i}" type="number" step="1000" min="0" value="${a.v}" aria-label="Montant"><button type="button" data-act="del" data-i="${i}" aria-label="Supprimer">×</button></div>`).join('');
+}
+$('inputs').addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.ap){const a=S.ap[t.dataset.i];t.dataset.ap==='l'?a.l=t.value:a.v=parseFloat(t.value)||0;return update()}
+  const id=t.id.slice(2),v=parseFloat(t.value);if(!id||isNaN(v))return;
+  S[id]=v;const o=t.type==='range'?$('n_'+id):$('r_'+id);if(o)o.value=v;update();
+});
+$('inputs').addEventListener('click',e=>{
+  const a=e.target.dataset.act;if(!a)return;
+  a==='add'?S.ap.push({l:'Nouvelle somme',v:0}):S.ap.splice(+e.target.dataset.i,1);
+  renderAp();update();
+});
+$('reset').onclick=()=>{Object.assign(S,structuredClone(D));build();update()};
+
+function update(){
+  S.apport=Math.max(0,S.ap.reduce((s,a)=>s+(+a.v||0),0));
+  const N=Math.max(1,S.duree)*12,nom=Math.max(0,S.nominal)/100,tg=taeg();
+  $('taegv').textContent=pct(tg);$('aptot').textContent=eur(S.apport);
+  const need=Math.max(0,S.prix*(1+S.notaire/100)-S.apport),L=need*(1+G/100);
+  const ass=L*S.assur/1200,mens=L*pmtf(nom,N)+ass,cout=mens*N-need;
+  MENS=mens;const endet=S.rev_brut?mens/S.rev_brut*100:0;
+  const c=cap(nom,S.apport),diff=c.prix-S.prix,mr=maxRate();
+  $('cap').textContent=eur(c.prix);
+  $('verdict').innerHTML=!S.rev_brut?'Renseigne tes revenus, ton prix et ton apport, ou charge un fichier JSON, pour voir ta capacité d\'achat.':(diff>=0?`<span class="ok">Le prix visé (${eur(S.prix)}) passe</span>, marge de ${eur(diff)}.`:`<span class="ko">Le prix visé (${eur(S.prix)}) ne passe pas</span> : il manque ${eur(-diff)}.`)+
+    ` ${mr===null?'Même à 0,1 % de TAEG, ce prix est hors de portée.':mr>=15?'':`Ce prix reste finançable jusqu'à ${pct(mr)} de TAEG.`}`;
+  const bud=c.prix*(1+S.notaire/100);
+  $('bind').textContent=`Prix hors frais de notaire. Budget total mobilisé : ${eur(bud)} (prêt hors garantie ${eur(bud-S.apport)} + apport ${eur(S.apport)}), dont ${eur(c.prix*S.notaire/100)} de frais de notaire. Calculé à ${pct(tg)} de TAEG, avec un taux d'endettement de ${S.endet_max} %.`;
+  const K=[['Montant emprunté',eur(L),`dont garantie ${eur(L-need)}`],
+   ['Mensualité',eur(mens),`dont assurance ${eur(ass)}`],
+   [`Mensualité ${NM.B} / ${NM.M}`,`${eur(mens*SH.k/100)} / ${eur(mens*(1-SH.k/100))}`,`répartition ${SH.k} % / ${100-SH.k} %`],
+   ["Taux d'endettement",pct(endet),endet<=S.endet_max?`<span class="ok">Sous la limite de ${S.endet_max} %</span>`:`<span class="ko">Au-dessus de la limite de ${S.endet_max} %</span>`],
+   ['Coût total du crédit',eur(cout),'intérêts + assurance + garantie']];
+  $('kpis').innerHTML=K.map(([a,b,s])=>`<div class="kpi"><span>${a}</span><strong>${b}</strong><small class="mute">${s}</small></div>`).join('');
+  draw(c.prix,tg);update2();
+}
+
+function draw(curCap,tg){
+  const el=$('chart'),W=el.clientWidth||600,H=Math.round(Math.min(380,Math.max(260,W*.55))),m={l:62,r:14,t:12,b:32};
+  const xs=[];for(let x=1;x<=7.001;x+=0.05)xs.push(+x.toFixed(2));
+  const noms=xs.map(nominalOf);
+  const aps=[Math.max(0,S.apport-50000),S.apport,S.apport+50000];
+  const ys=aps.map(a=>noms.map(n=>cap(n,a).prix));
+  const ymax=(Math.max(...ys[2],S.prix)*1.08)||1,X=x=>m.l+(x-1)/6*(W-m.l-m.r),Y=y=>H-m.b-y/ymax*(H-m.t-m.b);
+  const step=[50e3,100e3,200e3,250e3,500e3].find(s=>s>=ymax/5)||1e6;
+  let g='';
+  for(let y=0;y<=ymax;y+=step)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(y)}" y2="${Y(y)}" stroke="#e3e8ec"/><text x="${m.l-6}" y="${Y(y)+4}" text-anchor="end">${y/1000} k€</text>`;
+  for(let x=1;x<=7;x++)g+=`<text x="${X(x)}" y="${H-10}" text-anchor="middle">${x} %</text>`;
+  const path=a=>'M'+xs.map((x,i)=>`${X(x).toFixed(1)},${Y(a[i]).toFixed(1)}`).join('L');
+  g+=`<path d="${path(ys[0])}" fill="none" stroke="var(--alt)" stroke-dasharray="5 4" stroke-width="1.5"/><path d="${path(ys[2])}" fill="none" stroke="var(--alt)" stroke-dasharray="5 4" stroke-width="1.5"/>`;
+  g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(S.prix)}" y2="${Y(S.prix)}" stroke="var(--target)" stroke-dasharray="6 4"/>`;
+  g+=`<path d="${path(ys[1])}" fill="none" stroke="var(--main)" stroke-width="3"/>`;
+  if(tg>=1&&tg<=7)g+=`<line x1="${X(tg)}" x2="${X(tg)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--main)" stroke-opacity=".35"/><circle cx="${X(tg)}" cy="${Y(curCap)}" r="5.5" fill="var(--main)" stroke="#fff" stroke-width="2"/>`;
+  g+=`<line id="hv" y1="${m.t}" y2="${H-m.b}" stroke="var(--ink)" stroke-opacity=".4" style="display:none"/><text x="${(m.l+W-m.r)/2}" y="${H-1}" text-anchor="middle" style="font-size:10px">TAEG</text>`;
+  el.querySelector('svg')?.remove();
+  el.insertAdjacentHTML('afterbegin',`<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Capacité d'achat selon le TAEG">${g}</svg>`);
+  const svg=el.querySelector('svg'),hv=svg.querySelector('#hv'),tip=$('tip');
+  svg.onpointermove=e=>{
+    const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W;
+    const i=Math.max(0,Math.min(xs.length-1,Math.round((px-m.l)/(W-m.l-m.r)*(xs.length-1))));
+    hv.setAttribute('x1',X(xs[i]));hv.setAttribute('x2',X(xs[i]));hv.style.display='';
+    tip.innerHTML=`<b>TAEG ${pct(xs[i])}</b><br>Apport actuel : ${eur(ys[1][i])}<br>${eur(aps[0])} : ${eur(ys[0][i])}<br>${eur(aps[2])} : ${eur(ys[2][i])}`;
+    tip.style.display='block';
+    const left=X(xs[i])/W*r.width;tip.style.left=Math.min(left+12,r.width-tip.offsetWidth-4)+'px';tip.style.top='10px';
+  };
+  svg.onpointerleave=()=>{hv.style.display='none';tip.style.display='none'};
+}
+
+
+// ---------- Onglet Reste à vivre ----------
+const SEC=[['rev','Revenus nets après impôts'],['log','Logement et énergie'],['fam','Famille'],['trans','Transport'],['vie','Alimentation et loisirs'],['abo','Abonnements et divers']];
+const NM={B:'Personne 1',M:'Personne 2'};
+const OWN=o=>o==='C'?'Commun':NM[o];
+const SH={c:50,k:50}; // part de la personne 1 (%) des dépenses communes et du crédit
+const L=(l,v,o)=>({l,v,o});
+const D2={rev:[L('Salaire',0,'B'),L('Salaire',0,'M')],log:[],fam:[],trans:[],vie:[],abo:[]};
+const S2=structuredClone(D2);
+const num=a=>+a.v||0;
+const sum=k=>S2[k].reduce((s,a)=>s+num(a),0);
+function calc2(cred){ // reste à vivre par personne
+  const own=o=>SEC.slice(1).reduce((s,[k])=>s+S2[k].filter(a=>a.o===o).reduce((t,a)=>t+num(a),0),0);
+  const rv=o=>S2.rev.filter(a=>a.o===o).reduce((t,a)=>t+num(a),0),dc=own('C');
+  return [[NM.B,'B',SH.c/100,SH.k/100],[NM.M,'M',1-SH.c/100,1-SH.k/100]].map(([n,o,pc,pk])=>{
+    const rev=rv(o),dp=own(o),cm=dc*pc,cr=cred*pk;return {n,rev,dp,cm,cr,rav:rev-dp-cm-cr}});
+}
+function render2(){
+  const sel=(k,a,i)=>`<select data-k="${k}" data-i="${i}" data-f="o" aria-label="Attribué à">${(k==='rev'?['B','M']:['B','M','C']).map(o=>`<option value="${o}"${a.o===o?' selected':''}>${OWN(o)}</option>`).join('')}</select>`;
+  $('lists').innerHTML=SEC.map(([k,t])=>`<section class="card"><h2>${t}<span id="st_${k}"></span></h2>${S2[k].map((a,i)=>`<div class="ap3"><input data-k="${k}" data-i="${i}" data-f="l" value="${a.l.replace(/"/g,'&quot;')}" placeholder="Libellé" aria-label="Libellé">${sel(k,a,i)}<input data-k="${k}" data-i="${i}" data-f="v" type="number" step="10" value="${a.v}" aria-label="Montant mensuel"><button type="button" data-act2="del" data-k="${k}" data-i="${i}" aria-label="Supprimer">×</button></div>`).join('')}<button class="add" type="button" data-act2="add" data-k="${k}">+ Ajouter une ligne</button></section>`).join('');
+  $('nmB').value=NM.B;$('nmM').value=NM.M;document.querySelectorAll('.nB').forEach(e=>e.textContent=NM.B);
+}
+$('nmB').onchange=$('nmM').onchange=e=>{NM[e.target.id==='nmB'?'B':'M']=e.target.value.trim().slice(0,30)||(e.target.id==='nmB'?'Personne 1':'Personne 2');render2();update()};
+$('lists').addEventListener('input',e=>{const t=e.target,d=t.dataset;if(!d.f)return;const a=S2[d.k][d.i];if(d.f==='l')a.l=t.value;else if(d.f==='o')a.o=t.value;else a.v=parseFloat(t.value)||0;update2()});
+$('lists').addEventListener('click',e=>{const d=e.target.dataset;if(!d.act2)return;d.act2==='add'?S2[d.k].push(L('',0,d.k==='rev'?'B':'C')):S2[d.k].splice(+d.i,1);render2();update2()});
+$('p2').addEventListener('input',e=>{const k=e.target.dataset.sh;if(!k)return;SH[k]=Math.min(100,Math.max(0,parseFloat(e.target.value)||0));
+  document.querySelectorAll(`[data-sh="${k}"]`).forEach(x=>{if(x!==e.target)x.value=SH[k]});update();});
+$('inc').onchange=update2;
+$('reset2').onclick=()=>{Object.assign(S2,structuredClone(D2));SH.c=SH.k=50;document.querySelectorAll('[data-sh]').forEach(x=>x.value=50);render2();update()};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  $('p1').hidden=b.dataset.t!=='1';$('p2').hidden=b.dataset.t!=='2';update();
+});
+function update2(){
+  SEC.forEach(([k])=>$('st_'+k).textContent=eur(sum(k)));
+  const cred=$('inc').checked?MENS:0,P=calc2(cred),rev=P[0].rev+P[1].rev,tot=P[0].rav+P[1].rav;
+  const neg=P.filter(p=>p.rav<0).map(p=>p.n);
+  $('rav').innerHTML=`<span class="${tot>=0?'':'ko'}">${eur(tot)}</span>`;
+  $('ravsub').textContent=neg.length?`Déficit pour ${neg.join(' et ')}.`:`${pct(rev?tot/rev*100:0)} des revenus du foyer (${eur(rev)}).`;
+  $('pp').innerHTML=P.map(p=>{
+    const t=Math.max(p.rev,p.dp+p.cm+p.cr)||1,parts=[['Dépenses perso',p.dp,'#0f766e'],['Part commune',p.cm,'#2b6cb0'],['Crédit',p.cr,'#14212b'],['Reste à vivre',Math.max(0,p.rav),'#d5dce2']];
+    return `<div class="pb"><h3>${p.n}</h3><div class="pv ${p.rav<0?'ko':''}">${eur(p.rav)}</div><div class="mute" style="font-size:.75rem">${pct(p.rev?p.rav/p.rev*100:0)} de ${eur(p.rev)}</div><div class="bar">${parts.filter(x=>x[1]>0).map(([a,v,c])=>`<i style="width:${v/t*100}%;background:${c}" title="${a}"></i>`).join('')}</div><div class="leg">${parts.slice(0,3).map(([a,v,c])=>`<div><i style="background:${c}"></i><span>${a}</span><b>${eur(v)}</b></div>`).join('')}</div></div>`}).join('');
+  $('credinfo').textContent=`Mensualité reprise de la simulation : ${eur(MENS)} (bien à ${eur(S.prix)}, TAEG ${pct(taeg())}).`;
+  $('pre').textContent=`Reste à vivre du foyer avant crédit : ${eur(tot+cred)}.`;
+}
+
+// ---------- Sauvegarde / chargement local (JSON) ----------
+const isNum=v=>typeof v==='number'&&isFinite(v);
+const CAT={log:'logement_energie',fam:'famille',trans:'transport',vie:'alimentation_loisirs',abo:'abonnements_divers'};
+const OW={B:'personne_1',M:'personne_2',C:'commun'},OWr=Object.fromEntries(Object.entries(OW).map(([a,b])=>[b,a]));
+const CK={prix:'prix_du_bien',duree:'duree_ans',nominal:'taux_nominal_pct',assur:'assurance_emprunteur_pct_par_an',notaire:'frais_notaire_pct',rev_brut:'revenus_nets_avant_impots_mensuels',endet_max:'taux_endettement_max_pct'};
+const pc=v=>Math.min(100,Math.max(0,v));
+function toJSON(){ // état -> fichier : un objet par onglet
+  const line=a=>({libelle:a.l,montant:a.v,attribue_a:OW[a.o]});
+  return {version:2,
+    simulation_credit:{...Object.fromEntries(Object.entries(CK).map(([k,n])=>[n,S[k]])),apport:S.ap.map(a=>({libelle:a.l,montant:a.v}))},
+    reste_a_vivre:{personnes:{personne_1:NM.B,personne_2:NM.M},
+      repartition_part_personne_1_pct:{depenses_communes:SH.c,mensualite_credit:SH.k},
+      revenus:S2.rev.map(line),
+      depenses:Object.fromEntries(Object.entries(CAT).map(([k,n])=>[n,S2[k].map(line)]))}};
+}
+function applyData(d){ // fichier -> état, en ignorant tout ce qui est invalide
+  const c=d&&d.simulation_credit,r=d&&d.reste_a_vivre;
+  if(!c&&!r)throw new Error('format');
+  if(c){for(const [k,n] of Object.entries(CK))if(isNum(c[n]))S[k]=c[n];
+    if(Array.isArray(c.apport))S.ap=c.apport.map(a=>({l:String(a?.libelle??''),v:isNum(a?.montant)?a.montant:0}));}
+  if(r){
+    const p=r.personnes||{};
+    for(const [k,n] of [['B','personne_1'],['M','personne_2']])if(typeof p[n]==='string'&&p[n].trim())NM[k]=p[n].trim().slice(0,30);
+    const ln=(arr,ok,def)=>Array.isArray(arr)?arr.map(a=>{const o=OWr[a?.attribue_a];return {l:String(a?.libelle??''),v:isNum(a?.montant)?a.montant:0,o:ok.includes(o)?o:def}}):null;
+    const rv=ln(r.revenus,['B','M'],'B');if(rv)S2.rev=rv;
+    for(const [k,n] of Object.entries(CAT)){const l=ln(r.depenses?.[n],['B','M','C'],'C');if(l)S2[k]=l}
+    const sh=r.repartition_part_personne_1_pct||{};
+    if(isNum(sh.depenses_communes))SH.c=pc(sh.depenses_communes);if(isNum(sh.mensualite_credit))SH.k=pc(sh.mensualite_credit);
+  }
+}
+const note=t=>$('msg').textContent=t;
+function loadText(txt,name){
+  try{applyData(JSON.parse(txt));build();render2();
+    document.querySelectorAll('[data-sh]').forEach(x=>x.value=SH[x.dataset.sh]);update();note(`« ${name} » chargé.`)}
+  catch(e){note('Fichier illisible : ce n\'est pas une sauvegarde de ce simulateur.')}
+}
+$('save').onclick=()=>{
+  const d=toJSON();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));
+  a.download='simulation-immo.json';a.click();URL.revokeObjectURL(a.href);note('Fichier simulation-immo.json enregistré dans tes téléchargements.');
+};
+$('load').onclick=()=>$('file').click();
+$('file').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>loadText(t,f.name));e.target.value=''};
+addEventListener('dragover',e=>{e.preventDefault();document.body.classList.add('drag')});
+addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('drag')});
+addEventListener('drop',e=>{e.preventDefault();document.body.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)f.text().then(t=>loadText(t,f.name))});
+
+build();render2();update();
+addEventListener('resize',update);
+</script>
+</body>
+</html>
