@@ -87,7 +87,7 @@ const D={prix:0,duree:25,nominal:4,assur:0.3,notaire:8,rev_brut:0,endet_max:35,a
 const G=1.05; // frais de garantie financés (% du prêt)
 const S=structuredClone(D);
 let MENS=0,ASSM=0,INC=true;
- 
+
 const pmtf=(r,n)=>r===0?1/n:(r/12)/(1-Math.pow(1+r/12,-n)); // mensualité par € emprunté, hors assurance
 const taeg=()=>S.nominal+S.assur;
 const nominalOf=x=>Math.max(0,x-S.assur)/100; // TAEG (%) -> taux nominal décimal
@@ -101,7 +101,7 @@ function maxRate(){ // TAEG max permettant d'acheter au prix visé
   if(f(0.1)<S.prix)return null;if(f(15)>=S.prix)return 15;
   let lo=0.1,hi=15;for(let k=0;k<30;k++){const m=(lo+hi)/2;f(m)>=S.prix?lo=m:hi=m}return lo;
 }
- 
+
 const row=([id,l,u,a,b,s])=>`<div class="row"><label for="n_${id}">${l}</label><span class="num"><input id="n_${id}" type="number" step="${s}" value="${S[id]}"><i>${u}</i></span><input id="r_${id}" type="range" min="${a}" max="${b}" step="${s}" value="${S[id]}" aria-label="${l}"></div>`;
 const fs=(g,rows,pre='')=>`<fieldset>${g?`<legend>${g}</legend>`:''}${pre}${rows.map(row).join('')}</fieldset>`;
 function build(){
@@ -128,7 +128,7 @@ $('inputs').addEventListener('click',e=>{
   renderAp();update();
 });
 $('reset').onclick=()=>{Object.assign(S,structuredClone(D));build();update()};
- 
+
 function update(){
   S.apport=Math.max(0,S.ap.reduce((s,a)=>s+(+a.v||0),0));
   const N=Math.max(1,S.duree)*12,nom=Math.max(0,S.nominal)/100,tg=taeg();
@@ -150,7 +150,7 @@ function update(){
   $('kpis').innerHTML=K.map(([a,b,s])=>`<div class="kpi"><span>${a}</span><strong>${b}</strong><small class="mute">${s}</small></div>`).join('');
   draw(c.prix,tg);update2();
 }
- 
+
 function draw(curCap,tg){
   const el=$('chart'),W=el.clientWidth||600,H=Math.round(Math.min(380,Math.max(260,W*.55))),m={l:62,r:14,t:12,b:32};
   const xs=[];for(let x=1;x<=7.001;x+=0.05)xs.push(+x.toFixed(2));
@@ -181,8 +181,8 @@ function draw(curCap,tg){
   };
   svg.onpointerleave=()=>{hv.style.display='none';tip.style.display='none'};
 }
- 
- 
+
+
 // ---------- Onglet Reste à vivre ----------
 const SEC=[['rev','Revenus nets après impôts'],['log','Logement et énergie'],['fam','Famille'],['trans','Transport'],['vie','Alimentation et loisirs'],['abo','Abonnements et divers']];
 const NM={B:'Personne 1',M:'Personne 2'};
@@ -232,7 +232,7 @@ function update2(){
   $('cgrid').innerHTML=P.map((p,i)=>`<div><span class="mute">${p.n}</span><strong>${eur(MENS*sh[i])}</strong><small>${p.rev?pct(MENS*sh[i]/p.rev*100)+' de son salaire':'salaire non renseigné'}</small></div>`).join('')+`<div><span class="mute">Foyer</span><strong>${eur(MENS)}</strong><small>${rev?pct(MENS/rev*100)+' des revenus nets':'revenus non renseignés'}</small></div>`;
   $('pre').textContent=`Reste à vivre du foyer avant crédit : ${eur(tot+cred)}.`;
 }
- 
+
 // ---------- Sauvegarde / chargement local (JSON) ----------
 const isNum=v=>typeof v==='number'&&isFinite(v);
 const CAT={log:'logement_energie',fam:'famille',trans:'transport',vie:'alimentation_loisirs',abo:'abonnements_divers'};
@@ -279,7 +279,7 @@ $('file').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>loadText(
 addEventListener('dragover',e=>{e.preventDefault();document.body.classList.add('drag')});
 addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('drag')});
 addEventListener('drop',e=>{e.preventDefault();document.body.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)f.text().then(t=>loadText(t,f.name))});
- 
+
 build();render2();update();
 addEventListener('resize',update);
 </script>
