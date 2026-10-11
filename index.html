@@ -1,3 +1,68 @@
+
+Locating the correct settings page for domain setup.
+Locating the correct settings page for domain setup.
+Tu es au mauvais endroit : cette page « Add a verified domain » vient des réglages de ton compte (Settings personnels) et sert uniquement à vérifier un nom de domaine à toi. Ne remplis rien ici, tu n’en as pas besoin.
+
+Il faut passer par un dépôt, c’est dans les réglages du dépôt que Pages s’active :
+
+Clique sur le logo GitHub en haut à gauche, puis sur le « + » en haut à droite et « New repository ». Nomme-le par exemple simulateur-immo, laisse-le en Public et clique sur « Create repository ».
+Sur la page du dépôt, clique sur « uploading an existing file ». Glisse uniquement index.html, puis « Commit changes ».
+Toujours dans le dépôt, clique sur l’onglet Settings dans la barre du haut, juste sous le nom du dépôt (pas dans ton menu de profil). Dans le menu de gauche, ouvre Pages, sous « Code and automation ».
+Choisis Source : « Deploy from a branch », Branch : main, dossier / (root), puis Save.
+Après 1 à 2 minutes, ton site sera sur https://darksubmit.github.io/simulateur-immo/. Si tu as déjà créé le dépôt et que tu ne trouves pas l’onglet Settings, dis-moi ce que tu vois en haut de la page du dépôt.
+
+je trouve que l'inclusion de la mansualité n'est pas assé mise en avant je voudrait un encart avec le montant et la charge sur la mensualité en pourcentage par personne juste en dessous des salaires
+
+A exécuté une commande, fichiers partagés
+J’ai ajouté l’encart « Mensualité du crédit » dans l’onglet Reste à vivre, juste sous la carte des salaires. Je l’ai testé dans un navigateur simulé avec ton JSON, et les chiffres correspondent à ceux attendus.
+
+L’encart a un liseré vert et affiche, avec tes données :
+
+La mensualité totale en grand : 1 209 € par mois, avec dessous la part d’assurance (53 €), le prix du bien et le TAEG.
+Une case par personne :
+Bastien : 628 €, soit 22,45 % de son salaire (52 % de la mensualité).
+Mélanie : 580 €, soit 24,81 % de son salaire (48 % de la mensualité).
+Une case Foyer : 1 209 €, soit 23,52 % des revenus nets.
+L’encart se met à jour dès que tu changes quelque chose dans l’onglet Capacité d’achat (prix, apport, taux) ou la répartition du crédit. Si tu décoches « Inclure la mensualité du crédit », il affiche « non incluse », mais garde les montants pour comparer. Si un salaire n’est pas renseigné, la case indique « salaire non renseigné » plutôt qu’un pourcentage absurde.
+
+Les pourcentages sont calculés sur les salaires nets après impôts de l’onglet Reste à vivre, pas sur les revenus avant impôts de la simulation de crédit.
+
+
+Index
+Code·HTML 
+j'aimerais que tu déplace le 
+Inclure la mensualité du crédit
+Mensualité reprise de la simulation : 0 € (bien à 0 €, TAEG 4,30 %).
+Reste à vivre du foyer avant crédit : 0 €. dans l'encart Mensualité de crédit et que tu rajoute un selecteur de pourcentage entre personne 1 et personne 2 sur la charge de ce crédit
+
+A exécuté une commande, fichiers partagés
+J’ai déplacé les trois éléments dans l’encart « Mensualité du crédit » et ajouté le curseur de répartition entre personne 1 et personne 2. J’ai testé le tout dans un navigateur simulé avec ton JSON.
+
+Case à cocher : elle se trouve maintenant dans l’encart, avec le libellé « Inclure la mensualité du crédit dans le reste à vivre ». Son état est conservé quand tu ajoutes ou supprimes une ligne.
+Informations reprises : « dont assurance, reprise de la simulation (bien à…, TAEG…) » et « Reste à vivre du foyer avant crédit » sont dans l’encart. La colonne de droite n’a plus que le reste à vivre par personne et les dépenses communes.
+Curseur de répartition : il affiche « Bastien 52 % » à gauche et « Mélanie 48 % » à droite. En le déplaçant, les montants et pourcentages de salaire des cases se mettent à jour en direct. À 60 % / 40 %, Bastien passe à 725 € (25,90 % de son salaire) et Mélanie à 483 € (20,68 %). Les deux reste à vivre se mettent à jour, et l’indicateur « Mensualité Bastien / Mélanie » de l’onglet Capacité d’achat aussi.
+Le curseur du crédit n’est plus dans la colonne de droite. La répartition des dépenses communes y reste, avec les prénoms, sous le titre « Dépenses communes : part de Bastien ». La valeur du curseur est toujours enregistrée dans le JSON (mensualite_credit).
+
+
+Index
+Code·HTML 
+change la couleur du pourcentage d'affectation car cela ce confond avec le libele Perosnne 1/ Personne 2
+
+A exécuté une commande, fichiers partagés
+Les pourcentages du curseur de répartition s’affichent maintenant dans une pastille verte avec le texte en blanc, alors que les prénoms sont en texte normal, un peu plus léger. Je n’ai vérifié que la syntaxe du fichier, pas le rendu, donc dis-moi si le contraste te convient.
+
+Si tu préfères une autre couleur pour les pastilles, je peux la changer.
+
+
+Index
+Code·HTML 
+
+
+
+Claude est une IA et peut commettre des erreurs.
+
+
+Index · HTML
 <!doctype html>
 <html lang="fr">
 <head>
@@ -31,6 +96,9 @@ fieldset{border:0;padding:0;margin:0 0 14px}legend{font-weight:650;padding:0;mar
 .leg div{display:grid;grid-template-columns:12px 1fr auto 58px;gap:6px;align-items:center;font-size:.82rem;padding:2px 0}.leg i{width:10px;height:10px;border-radius:2px}.leg em{font-style:normal;color:var(--mute);text-align:right}
 .chk{display:flex;gap:6px;margin:12px 0 4px;font-size:.88rem}
 .ap3{display:grid;grid-template-columns:1fr 96px 84px 26px;gap:6px;margin-bottom:6px}.ap3 input,.ap3 select{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit;background:#fff}.ap3 input[type=number]{text-align:right}.ap3 button{border:1px solid var(--line);background:#f6f8fa;border-radius:5px;cursor:pointer;font:inherit}
+.cred{border-left:4px solid var(--main);background:#f3f9f8}.cbig{font-size:1.9rem;font-weight:700;color:var(--main);line-height:1.2}.cbig small{font-size:.9rem;font-weight:500;color:var(--mute)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}.cgrid>div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px}.cgrid span{display:block;font-size:.8rem;float:none;font-weight:400}.cgrid strong{display:block;font-size:1.2rem}.cgrid small{display:block;font-size:.76rem;color:var(--mute)}
+.split{display:flex;align-items:center;gap:10px;margin:12px 0 4px}.split input{flex:1;min-width:0;accent-color:var(--main)}.split span{font-size:.85rem;white-space:nowrap}.split b{font-weight:500}.split em{font-style:normal;font-weight:700;background:var(--main);color:#fff;border-radius:999px;padding:1px 9px;margin-left:4px}
 .names{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.names input{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit}
 .pp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.pb{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.pb h3{margin:0;font-size:.9rem}.pv{font-size:1.35rem;font-weight:700;color:var(--main)}.pv.ko{color:var(--ko)}.pb .bar{margin:8px 0}.pb .leg div{grid-template-columns:12px 1fr auto;font-size:.74rem}
 .io{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.io button{padding:6px 12px;border:1px solid var(--line);background:var(--panel);border-radius:6px;font:inherit;font-size:.85rem;cursor:pointer}.io span{font-size:.8rem;color:var(--mute)}body.drag{outline:3px dashed var(--main);outline-offset:-8px}
@@ -68,11 +136,10 @@ svg text{font-size:11px;fill:var(--mute)}
 <div class="wrap" id="p2" hidden>
 <aside><div class="mute">Reste à vivre mensuel du foyer</div><div class="hero"><div class="big" id="rav" style="border:0;padding:0"></div></div><p class="mute" id="ravsub"></p>
 <div class="pp" id="pp"></div>
-<label class="chk"><input type="checkbox" id="inc" checked> Inclure la mensualité du crédit</label><p class="hint" id="credinfo"></p><p class="hint" id="pre"></p>
-<fieldset style="margin-top:10px"><legend>Répartition (part de <span class="nB"></span>)</legend>
+<fieldset style="margin-top:10px"><legend>Dépenses communes : part de <span class="nB"></span></legend>
 <div class="names"><input id="nmB" aria-label="Prénom de la première personne" placeholder="Personne 1"><input id="nmM" aria-label="Prénom de la seconde personne" placeholder="Personne 2"></div>
 <div class="row"><label>Dépenses « Commun »</label><span class="num"><input type="number" min="0" max="100" step="1" value="50" data-sh="c"><i>%</i></span><input type="range" min="0" max="100" step="1" value="50" data-sh="c" aria-label="Part de la première personne dans les dépenses communes"></div>
-<div class="row"><label>Mensualité du crédit</label><span class="num"><input type="number" min="0" max="100" step="1" value="50" data-sh="k"><i>%</i></span><input type="range" min="0" max="100" step="1" value="50" data-sh="k" aria-label="Part de la première personne dans le crédit"></div></fieldset>
+</fieldset>
 <button id="reset2" type="button">Réinitialiser les dépenses</button>
 <p class="note" style="margin-top:10px">Chaque ligne est attribuée à une personne ou à « Commun » (réparti selon les parts ci-dessus). Montants mensuels. Pour le crédit, la mensualité vient de l'onglet « Capacité d'achat ».</p></aside>
 <main id="lists"></main>
@@ -84,8 +151,8 @@ const pct=v=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFract
 const D={prix:0,duree:25,nominal:4,assur:0.3,notaire:8,rev_brut:0,endet_max:35,ap:[]};
 const G=1.05; // frais de garantie financés (% du prêt)
 const S=structuredClone(D);
-let MENS=0;
-
+let MENS=0,ASSM=0,INC=true;
+ 
 const pmtf=(r,n)=>r===0?1/n:(r/12)/(1-Math.pow(1+r/12,-n)); // mensualité par € emprunté, hors assurance
 const taeg=()=>S.nominal+S.assur;
 const nominalOf=x=>Math.max(0,x-S.assur)/100; // TAEG (%) -> taux nominal décimal
@@ -99,7 +166,7 @@ function maxRate(){ // TAEG max permettant d'acheter au prix visé
   if(f(0.1)<S.prix)return null;if(f(15)>=S.prix)return 15;
   let lo=0.1,hi=15;for(let k=0;k<30;k++){const m=(lo+hi)/2;f(m)>=S.prix?lo=m:hi=m}return lo;
 }
-
+ 
 const row=([id,l,u,a,b,s])=>`<div class="row"><label for="n_${id}">${l}</label><span class="num"><input id="n_${id}" type="number" step="${s}" value="${S[id]}"><i>${u}</i></span><input id="r_${id}" type="range" min="${a}" max="${b}" step="${s}" value="${S[id]}" aria-label="${l}"></div>`;
 const fs=(g,rows,pre='')=>`<fieldset>${g?`<legend>${g}</legend>`:''}${pre}${rows.map(row).join('')}</fieldset>`;
 function build(){
@@ -126,14 +193,14 @@ $('inputs').addEventListener('click',e=>{
   renderAp();update();
 });
 $('reset').onclick=()=>{Object.assign(S,structuredClone(D));build();update()};
-
+ 
 function update(){
   S.apport=Math.max(0,S.ap.reduce((s,a)=>s+(+a.v||0),0));
   const N=Math.max(1,S.duree)*12,nom=Math.max(0,S.nominal)/100,tg=taeg();
   $('taegv').textContent=pct(tg);$('aptot').textContent=eur(S.apport);
   const need=Math.max(0,S.prix*(1+S.notaire/100)-S.apport),L=need*(1+G/100);
   const ass=L*S.assur/1200,mens=L*pmtf(nom,N)+ass,cout=mens*N-need;
-  MENS=mens;const endet=S.rev_brut?mens/S.rev_brut*100:0;
+  MENS=mens;ASSM=ass;const endet=S.rev_brut?mens/S.rev_brut*100:0;
   const c=cap(nom,S.apport),diff=c.prix-S.prix,mr=maxRate();
   $('cap').textContent=eur(c.prix);
   $('verdict').innerHTML=!S.rev_brut?'Renseigne tes revenus, ton prix et ton apport, ou charge un fichier JSON, pour voir ta capacité d\'achat.':(diff>=0?`<span class="ok">Le prix visé (${eur(S.prix)}) passe</span>, marge de ${eur(diff)}.`:`<span class="ko">Le prix visé (${eur(S.prix)}) ne passe pas</span> : il manque ${eur(-diff)}.`)+
@@ -148,7 +215,7 @@ function update(){
   $('kpis').innerHTML=K.map(([a,b,s])=>`<div class="kpi"><span>${a}</span><strong>${b}</strong><small class="mute">${s}</small></div>`).join('');
   draw(c.prix,tg);update2();
 }
-
+ 
 function draw(curCap,tg){
   const el=$('chart'),W=el.clientWidth||600,H=Math.round(Math.min(380,Math.max(260,W*.55))),m={l:62,r:14,t:12,b:32};
   const xs=[];for(let x=1;x<=7.001;x+=0.05)xs.push(+x.toFixed(2));
@@ -179,8 +246,8 @@ function draw(curCap,tg){
   };
   svg.onpointerleave=()=>{hv.style.display='none';tip.style.display='none'};
 }
-
-
+ 
+ 
 // ---------- Onglet Reste à vivre ----------
 const SEC=[['rev','Revenus nets après impôts'],['log','Logement et énergie'],['fam','Famille'],['trans','Transport'],['vie','Alimentation et loisirs'],['abo','Abonnements et divers']];
 const NM={B:'Personne 1',M:'Personne 2'};
@@ -199,15 +266,15 @@ function calc2(cred){ // reste à vivre par personne
 }
 function render2(){
   const sel=(k,a,i)=>`<select data-k="${k}" data-i="${i}" data-f="o" aria-label="Attribué à">${(k==='rev'?['B','M']:['B','M','C']).map(o=>`<option value="${o}"${a.o===o?' selected':''}>${OWN(o)}</option>`).join('')}</select>`;
-  $('lists').innerHTML=SEC.map(([k,t])=>`<section class="card"><h2>${t}<span id="st_${k}"></span></h2>${S2[k].map((a,i)=>`<div class="ap3"><input data-k="${k}" data-i="${i}" data-f="l" value="${a.l.replace(/"/g,'&quot;')}" placeholder="Libellé" aria-label="Libellé">${sel(k,a,i)}<input data-k="${k}" data-i="${i}" data-f="v" type="number" step="10" value="${a.v}" aria-label="Montant mensuel"><button type="button" data-act2="del" data-k="${k}" data-i="${i}" aria-label="Supprimer">×</button></div>`).join('')}<button class="add" type="button" data-act2="add" data-k="${k}">+ Ajouter une ligne</button></section>`).join('');
-  $('nmB').value=NM.B;$('nmM').value=NM.M;document.querySelectorAll('.nB').forEach(e=>e.textContent=NM.B);
+  $('lists').innerHTML=SEC.map(([k,t])=>`<section class="card"><h2>${t}<span id="st_${k}"></span></h2>${S2[k].map((a,i)=>`<div class="ap3"><input data-k="${k}" data-i="${i}" data-f="l" value="${a.l.replace(/"/g,'&quot;')}" placeholder="Libellé" aria-label="Libellé">${sel(k,a,i)}<input data-k="${k}" data-i="${i}" data-f="v" type="number" step="10" value="${a.v}" aria-label="Montant mensuel"><button type="button" data-act2="del" data-k="${k}" data-i="${i}" aria-label="Supprimer">×</button></div>`).join('')}<button class="add" type="button" data-act2="add" data-k="${k}">+ Ajouter une ligne</button></section>${k==='rev'?`<section class="card cred" id="credcard"><h2>Mensualité du crédit<span id="credst"></span></h2><div class="cbig"><span id="credm"></span> <small>par mois</small></div><div class="mute" style="font-size:.82rem" id="credinfo"></div><label class="chk"><input type="checkbox" id="inc"${INC?' checked':''}> Inclure la mensualité du crédit dans le reste à vivre</label><div class="split"><span><b class="nB"></b> <em id="shk1"></em></span><input type="range" min="0" max="100" step="1" value="${SH.k}" data-sh="k" aria-label="Répartition de la charge du crédit entre les deux personnes"><span><b class="nM"></b> <em id="shk2"></em></span></div><div class="cgrid" id="cgrid"></div><p class="hint" id="pre" style="margin-top:8px"></p></section>`:''}`).join('');
+  $('nmB').value=NM.B;$('nmM').value=NM.M;document.querySelectorAll('.nB').forEach(e=>e.textContent=NM.B);document.querySelectorAll('.nM').forEach(e=>e.textContent=NM.M);
 }
 $('nmB').onchange=$('nmM').onchange=e=>{NM[e.target.id==='nmB'?'B':'M']=e.target.value.trim().slice(0,30)||(e.target.id==='nmB'?'Personne 1':'Personne 2');render2();update()};
 $('lists').addEventListener('input',e=>{const t=e.target,d=t.dataset;if(!d.f)return;const a=S2[d.k][d.i];if(d.f==='l')a.l=t.value;else if(d.f==='o')a.o=t.value;else a.v=parseFloat(t.value)||0;update2()});
 $('lists').addEventListener('click',e=>{const d=e.target.dataset;if(!d.act2)return;d.act2==='add'?S2[d.k].push(L('',0,d.k==='rev'?'B':'C')):S2[d.k].splice(+d.i,1);render2();update2()});
 $('p2').addEventListener('input',e=>{const k=e.target.dataset.sh;if(!k)return;SH[k]=Math.min(100,Math.max(0,parseFloat(e.target.value)||0));
   document.querySelectorAll(`[data-sh="${k}"]`).forEach(x=>{if(x!==e.target)x.value=SH[k]});update();});
-$('inc').onchange=update2;
+$('lists').addEventListener('change',e=>{if(e.target.id==='inc'){INC=e.target.checked;update2()}});
 $('reset2').onclick=()=>{Object.assign(S2,structuredClone(D2));SH.c=SH.k=50;document.querySelectorAll('[data-sh]').forEach(x=>x.value=50);render2();update()};
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));
@@ -215,17 +282,22 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
 });
 function update2(){
   SEC.forEach(([k])=>$('st_'+k).textContent=eur(sum(k)));
-  const cred=$('inc').checked?MENS:0,P=calc2(cred),rev=P[0].rev+P[1].rev,tot=P[0].rav+P[1].rav;
+  const cred=INC?MENS:0,P=calc2(cred),rev=P[0].rev+P[1].rev,tot=P[0].rav+P[1].rav;
   const neg=P.filter(p=>p.rav<0).map(p=>p.n);
   $('rav').innerHTML=`<span class="${tot>=0?'':'ko'}">${eur(tot)}</span>`;
   $('ravsub').textContent=neg.length?`Déficit pour ${neg.join(' et ')}.`:`${pct(rev?tot/rev*100:0)} des revenus du foyer (${eur(rev)}).`;
   $('pp').innerHTML=P.map(p=>{
     const t=Math.max(p.rev,p.dp+p.cm+p.cr)||1,parts=[['Dépenses perso',p.dp,'#0f766e'],['Part commune',p.cm,'#2b6cb0'],['Crédit',p.cr,'#14212b'],['Reste à vivre',Math.max(0,p.rav),'#d5dce2']];
     return `<div class="pb"><h3>${p.n}</h3><div class="pv ${p.rav<0?'ko':''}">${eur(p.rav)}</div><div class="mute" style="font-size:.75rem">${pct(p.rev?p.rav/p.rev*100:0)} de ${eur(p.rev)}</div><div class="bar">${parts.filter(x=>x[1]>0).map(([a,v,c])=>`<i style="width:${v/t*100}%;background:${c}" title="${a}"></i>`).join('')}</div><div class="leg">${parts.slice(0,3).map(([a,v,c])=>`<div><i style="background:${c}"></i><span>${a}</span><b>${eur(v)}</b></div>`).join('')}</div></div>`}).join('');
-  $('credinfo').textContent=`Mensualité reprise de la simulation : ${eur(MENS)} (bien à ${eur(S.prix)}, TAEG ${pct(taeg())}).`;
+  const sh=[SH.k/100,1-SH.k/100];
+  $('credst').textContent=INC?'incluse dans le reste à vivre':'non incluse dans le reste à vivre';
+  $('credm').textContent=eur(MENS);
+  $('credinfo').textContent=`dont assurance ${eur(ASSM)} · reprise de la simulation (bien à ${eur(S.prix)}, TAEG ${pct(taeg())})`;
+  $('shk1').textContent=`${+SH.k.toFixed(1)} %`;$('shk2').textContent=`${+(100-SH.k).toFixed(1)} %`;
+  $('cgrid').innerHTML=P.map((p,i)=>`<div><span class="mute">${p.n}</span><strong>${eur(MENS*sh[i])}</strong><small>${p.rev?pct(MENS*sh[i]/p.rev*100)+' de son salaire':'salaire non renseigné'}</small></div>`).join('')+`<div><span class="mute">Foyer</span><strong>${eur(MENS)}</strong><small>${rev?pct(MENS/rev*100)+' des revenus nets':'revenus non renseignés'}</small></div>`;
   $('pre').textContent=`Reste à vivre du foyer avant crédit : ${eur(tot+cred)}.`;
 }
-
+ 
 // ---------- Sauvegarde / chargement local (JSON) ----------
 const isNum=v=>typeof v==='number'&&isFinite(v);
 const CAT={log:'logement_energie',fam:'famille',trans:'transport',vie:'alimentation_loisirs',abo:'abonnements_divers'};
@@ -272,7 +344,7 @@ $('file').onchange=e=>{const f=e.target.files[0];if(f)f.text().then(t=>loadText(
 addEventListener('dragover',e=>{e.preventDefault();document.body.classList.add('drag')});
 addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('drag')});
 addEventListener('drop',e=>{e.preventDefault();document.body.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)f.text().then(t=>loadText(t,f.name))});
-
+ 
 build();render2();update();
 addEventListener('resize',update);
 </script>
