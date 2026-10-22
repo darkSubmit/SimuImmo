@@ -2,10 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1117">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Simulateur crédit immo & reste à vivre</title>
 <style>
-:root{--bg:#eef1f4;--panel:#fff;--ink:#14212b;--mute:#5b6b78;--line:#d5dce2;--main:#0f766e;--alt:#7f97a3;--target:#c0392b;--ok:#166534;--ko:#b91c1c}
+:root{--bg:#0d1117;--panel:#161b22;--raised:#21262d;--field:#0d1117;--ink:#e6edf3;--mute:#8b98a5;--line:#30363d;--main:#2dd4bf;--on-main:#04201c;--alt:#8b98a5;--target:#f87171;--ok:#4ade80;--ko:#f87171;color-scheme:dark}
+input:not([type=range]):not([type=checkbox]),select{background:var(--field);color:var(--ink)}button{color:var(--ink)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
 header{padding:20px 24px 4px;max-width:1200px;margin:auto}
@@ -18,26 +21,29 @@ fieldset{border:0;padding:0;margin:0 0 14px}legend{font-weight:650;padding:0;mar
 .row label{font-size:.85rem;color:var(--mute)}.row input[type=range]{grid-column:1/3;width:100%;accent-color:var(--main);margin:0}
 .num{display:flex;align-items:center;gap:4px}.num i{font-style:normal;color:var(--mute);font-size:.8rem;width:22px}
 .num input{width:92px;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit;text-align:right}
-.seg{display:flex;margin-bottom:6px}.seg button{flex:1;padding:5px;border:1px solid var(--line);background:#f6f8fa;font:inherit;font-size:.82rem;cursor:pointer}
+.seg{display:flex;margin-bottom:6px}.seg button{flex:1;padding:5px;border:1px solid var(--line);background:var(--raised);font:inherit;font-size:.82rem;cursor:pointer}
 .seg button:first-child{border-radius:5px 0 0 5px}.seg button:last-child{border-radius:0 5px 5px 0;border-left:0}
-.seg button.on{background:var(--main);color:#fff;border-color:var(--main)}
+.seg button.on{background:var(--main);color:var(--on-main);border-color:var(--main)}
 .hint{font-size:.8rem;color:var(--mute);margin:-2px 0 8px}
-/*ap*/.ap{display:grid;grid-template-columns:1fr 96px 26px;gap:6px;margin-bottom:6px}.ap input{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit}.ap input[type=number]{text-align:right}.ap button,.add{border:1px solid var(--line);background:#f6f8fa;border-radius:5px;cursor:pointer;font:inherit}.add{width:100%;padding:5px;margin-bottom:8px}.tot{display:flex;justify-content:space-between;font-weight:650}.taeg{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}.taeg strong{font-size:1.15rem;color:var(--main)}
+/*ap*/.ap{display:grid;grid-template-columns:1fr 96px 26px;gap:6px;margin-bottom:6px}.ap input{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit}.ap input[type=number]{text-align:right}.ap button,.add{border:1px solid var(--line);background:var(--raised);border-radius:5px;cursor:pointer;font:inherit}.add{width:100%;padding:5px;margin-bottom:8px}.tot{display:flex;justify-content:space-between;font-weight:650}.taeg{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}.taeg strong{font-size:1.15rem;color:var(--main)}
 [hidden]{display:none!important}
-.tabs{display:flex;gap:6px;max-width:1200px;margin:10px auto 0;padding:0 24px}.tabs button{padding:8px 16px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:#e2e8ec;font:inherit;font-weight:600;color:var(--mute);cursor:pointer}.tabs button.on{background:var(--panel);color:var(--main)}
+.tabs{display:flex;gap:6px;max-width:1200px;margin:10px auto 0;padding:0 24px}.tabs button{padding:8px 16px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--raised);font:inherit;font-weight:600;color:var(--mute);cursor:pointer}.tabs button.on{background:var(--panel);color:var(--main)}
 @media(min-width:900px){#p2{grid-template-columns:1fr 340px}#p2 aside{order:2}}
 #p2 main section{padding:12px 16px}h2 span{float:right;color:var(--mute);font-weight:500}
 .bar{display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--line);margin:12px 0}.bar i{display:block;height:100%}
 .leg div{display:grid;grid-template-columns:12px 1fr auto 58px;gap:6px;align-items:center;font-size:.82rem;padding:2px 0}.leg i{width:10px;height:10px;border-radius:2px}.leg em{font-style:normal;color:var(--mute);text-align:right}
 .chk{display:flex;gap:6px;margin:12px 0 4px;font-size:.88rem}
-.ap3{display:grid;grid-template-columns:1fr 96px 84px 26px;gap:6px;margin-bottom:6px}.ap3 input,.ap3 select{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit;background:#fff}.ap3 input[type=number]{text-align:right}.ap3 button{border:1px solid var(--line);background:#f6f8fa;border-radius:5px;cursor:pointer;font:inherit}
-.cred{border-left:4px solid var(--main);background:#f3f9f8}.cbig{font-size:1.9rem;font-weight:700;color:var(--main);line-height:1.2}.cbig small{font-size:.9rem;font-weight:500;color:var(--mute)}
-.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}.cgrid>div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px}.cgrid span{display:block;font-size:.8rem;float:none;font-weight:400}.cgrid strong{display:block;font-size:1.2rem}.cgrid small{display:block;font-size:.76rem;color:var(--mute)}
-.split{display:flex;align-items:center;gap:10px;margin:12px 0 4px}.split input{flex:1;min-width:0;accent-color:var(--main)}.split span{font-size:.85rem;white-space:nowrap}.split b{font-weight:500}.split em{font-style:normal;font-weight:700;background:var(--main);color:#fff;border-radius:999px;padding:1px 9px;margin-left:4px}
+.ap3{display:grid;grid-template-columns:1fr 84px 26px;gap:6px;margin-bottom:6px}.ap3 input{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit}.ap3 input[type=number]{text-align:right}.ap3 button{border:1px solid var(--line);background:var(--raised);border-radius:5px;cursor:pointer;font:inherit}
+.cred{border-left:4px solid var(--main);background:rgba(45,212,191,.07)}.cbig{font-size:1.9rem;font-weight:700;color:var(--main);line-height:1.2}.cbig small{font-size:.9rem;font-weight:500;color:var(--mute)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}.cgrid>div{background:var(--field);border:1px solid var(--line);border-radius:8px;padding:8px 10px}.cgrid span{display:block;font-size:.8rem;float:none;font-weight:400}.cgrid strong{display:block;font-size:1.2rem}.cgrid small{display:block;font-size:.76rem;color:var(--mute)}
+.split{display:flex;align-items:center;gap:10px;margin:12px 0 4px}.split input{flex:1;min-width:0;accent-color:var(--main)}.split span{font-size:.85rem;white-space:nowrap}.split b{font-weight:500}.split em{font-style:normal;font-weight:700;background:var(--main);color:var(--on-main);border-radius:999px;padding:1px 9px;margin-left:4px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}@media(max-width:700px){.duo{grid-template-columns:1fr}}
+.cat{margin-top:12px;padding-top:8px;border-top:1px solid var(--line)}.catgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 24px}.cat.first{border-top:0;margin-top:0;padding-top:0}.cat h3{display:flex;justify-content:space-between;margin:0 0 6px;font-size:.82rem;font-weight:600;color:var(--mute)}
+.splitv{margin:4px 0 2px}.splitv .lbls{display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:2px}.splitv input{width:100%;accent-color:var(--main);margin:0}.splitv b{font-weight:500}.splitv em{font-style:normal;font-weight:700;background:var(--main);color:var(--on-main);border-radius:999px;padding:1px 9px;margin-left:4px}
 .names{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}.names input{min-width:0;padding:4px 6px;border:1px solid var(--line);border-radius:5px;font:inherit}
 .pp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.pb{border:1px solid var(--line);border-radius:8px;padding:8px 10px}.pb h3{margin:0;font-size:.9rem}.pv{font-size:1.35rem;font-weight:700;color:var(--main)}.pv.ko{color:var(--ko)}.pb .bar{margin:8px 0}.pb .leg div{grid-template-columns:12px 1fr auto;font-size:.74rem}
 .io{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.io button{padding:6px 12px;border:1px solid var(--line);background:var(--panel);border-radius:6px;font:inherit;font-size:.85rem;cursor:pointer}.io span{font-size:.8rem;color:var(--mute)}body.drag{outline:3px dashed var(--main);outline-offset:-8px}
-#reset,#reset2{width:100%;padding:7px;border:1px solid var(--line);background:#f6f8fa;border-radius:5px;font:inherit;cursor:pointer}
+#reset,#reset2{width:100%;padding:7px;border:1px solid var(--line);background:var(--raised);border-radius:5px;font:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--main);outline-offset:2px}
 .hero .big{font-size:clamp(2rem,5vw,2.9rem);font-weight:700;line-height:1.1;color:var(--main)}
 .hero p{margin:6px 0 0}.mute{color:var(--mute)}
@@ -45,7 +51,7 @@ fieldset{border:0;padding:0;margin:0 0 14px}legend{font-weight:650;padding:0;mar
 main{display:grid;gap:16px}h2{font-size:1rem;margin:0 0 8px}
 #chart{position:relative}svg{width:100%;display:block;touch-action:pan-y}
 svg text{font-size:11px;fill:var(--mute)}
-#tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;border-radius:6px;padding:6px 9px;font-size:.78rem;line-height:1.5;display:none;white-space:nowrap}
+#tip{position:absolute;pointer-events:none;background:var(--raised);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:.78rem;line-height:1.5;display:none;white-space:nowrap}
 .legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.8rem;color:var(--mute);margin-top:6px}
 .legend b{display:inline-block;width:22px;height:0;border-top:3px solid;vertical-align:middle;margin-right:5px}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
@@ -71,12 +77,11 @@ svg text{font-size:11px;fill:var(--mute)}
 <div class="wrap" id="p2" hidden>
 <aside><div class="mute">Reste à vivre mensuel du foyer</div><div class="hero"><div class="big" id="rav" style="border:0;padding:0"></div></div><p class="mute" id="ravsub"></p>
 <div class="pp" id="pp"></div>
-<fieldset style="margin-top:10px"><legend>Dépenses communes : part de <span class="nB"></span></legend>
+<fieldset style="margin-top:10px"><legend>Prénoms</legend>
 <div class="names"><input id="nmB" aria-label="Prénom de la première personne" placeholder="Personne 1"><input id="nmM" aria-label="Prénom de la seconde personne" placeholder="Personne 2"></div>
-<div class="row"><label>Dépenses « Commun »</label><span class="num"><input type="number" min="0" max="100" step="1" value="50" data-sh="c"><i>%</i></span><input type="range" min="0" max="100" step="1" value="50" data-sh="c" aria-label="Part de la première personne dans les dépenses communes"></div>
 </fieldset>
 <button id="reset2" type="button">Réinitialiser les dépenses</button>
-<p class="note" style="margin-top:10px">Chaque ligne est attribuée à une personne ou à « Commun » (réparti selon les parts ci-dessus). Montants mensuels. Pour le crédit, la mensualité vient de l'onglet « Capacité d'achat ».</p></aside>
+<p class="note" style="margin-top:10px">Chaque colonne regroupe les revenus et les dépenses d'une personne. Le bloc « Commun » est réparti entre les deux selon son curseur. Montants mensuels. La mensualité du crédit vient de l'onglet « Capacité d'achat ».</p></aside>
 <main id="lists"></main>
 </div>
 <script>
@@ -160,13 +165,13 @@ function draw(curCap,tg){
   const ymax=(Math.max(...ys[2],S.prix)*1.08)||1,X=x=>m.l+(x-1)/6*(W-m.l-m.r),Y=y=>H-m.b-y/ymax*(H-m.t-m.b);
   const step=[50e3,100e3,200e3,250e3,500e3].find(s=>s>=ymax/5)||1e6;
   let g='';
-  for(let y=0;y<=ymax;y+=step)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(y)}" y2="${Y(y)}" stroke="#e3e8ec"/><text x="${m.l-6}" y="${Y(y)+4}" text-anchor="end">${y/1000} k€</text>`;
+  for(let y=0;y<=ymax;y+=step)g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(y)}" y2="${Y(y)}" stroke="var(--line)"/><text x="${m.l-6}" y="${Y(y)+4}" text-anchor="end">${y/1000} k€</text>`;
   for(let x=1;x<=7;x++)g+=`<text x="${X(x)}" y="${H-10}" text-anchor="middle">${x} %</text>`;
   const path=a=>'M'+xs.map((x,i)=>`${X(x).toFixed(1)},${Y(a[i]).toFixed(1)}`).join('L');
   g+=`<path d="${path(ys[0])}" fill="none" stroke="var(--alt)" stroke-dasharray="5 4" stroke-width="1.5"/><path d="${path(ys[2])}" fill="none" stroke="var(--alt)" stroke-dasharray="5 4" stroke-width="1.5"/>`;
   g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(S.prix)}" y2="${Y(S.prix)}" stroke="var(--target)" stroke-dasharray="6 4"/>`;
   g+=`<path d="${path(ys[1])}" fill="none" stroke="var(--main)" stroke-width="3"/>`;
-  if(tg>=1&&tg<=7)g+=`<line x1="${X(tg)}" x2="${X(tg)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--main)" stroke-opacity=".35"/><circle cx="${X(tg)}" cy="${Y(curCap)}" r="5.5" fill="var(--main)" stroke="#fff" stroke-width="2"/>`;
+  if(tg>=1&&tg<=7)g+=`<line x1="${X(tg)}" x2="${X(tg)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--main)" stroke-opacity=".35"/><circle cx="${X(tg)}" cy="${Y(curCap)}" r="5.5" fill="var(--main)" stroke="var(--panel)" stroke-width="2"/>`;
   g+=`<line id="hv" y1="${m.t}" y2="${H-m.b}" stroke="var(--ink)" stroke-opacity=".4" style="display:none"/><text x="${(m.l+W-m.r)/2}" y="${H-1}" text-anchor="middle" style="font-size:10px">TAEG</text>`;
   el.querySelector('svg')?.remove();
   el.insertAdjacentHTML('afterbegin',`<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="Capacité d'achat selon le TAEG">${g}</svg>`);
@@ -200,13 +205,17 @@ function calc2(cred){ // reste à vivre par personne
     const rev=rv(o),dp=own(o),cm=dc*pc,cr=cred*pk;return {n,rev,dp,cm,cr,rav:rev-dp-cm-cr}});
 }
 function render2(){
-  const sel=(k,a,i)=>`<select data-k="${k}" data-i="${i}" data-f="o" aria-label="Attribué à">${(k==='rev'?['B','M']:['B','M','C']).map(o=>`<option value="${o}"${a.o===o?' selected':''}>${OWN(o)}</option>`).join('')}</select>`;
-  $('lists').innerHTML=SEC.map(([k,t])=>`<section class="card"><h2>${t}<span id="st_${k}"></span></h2>${S2[k].map((a,i)=>`<div class="ap3"><input data-k="${k}" data-i="${i}" data-f="l" value="${a.l.replace(/"/g,'&quot;')}" placeholder="Libellé" aria-label="Libellé">${sel(k,a,i)}<input data-k="${k}" data-i="${i}" data-f="v" type="number" step="10" value="${a.v}" aria-label="Montant mensuel"><button type="button" data-act2="del" data-k="${k}" data-i="${i}" aria-label="Supprimer">×</button></div>`).join('')}<button class="add" type="button" data-act2="add" data-k="${k}">+ Ajouter une ligne</button></section>${k==='rev'?`<section class="card cred" id="credcard"><h2>Mensualité du crédit<span id="credst"></span></h2><div class="cbig"><span id="credm"></span> <small>par mois</small></div><div class="mute" style="font-size:.82rem" id="credinfo"></div><label class="chk"><input type="checkbox" id="inc"${INC?' checked':''}> Inclure la mensualité du crédit dans le reste à vivre</label><div class="split"><span><b class="nB"></b> <em id="shk1"></em></span><input type="range" min="0" max="100" step="1" value="${SH.k}" data-sh="k" aria-label="Répartition de la charge du crédit entre les deux personnes"><span><b class="nM"></b> <em id="shk2"></em></span></div><div class="cgrid" id="cgrid"></div><p class="hint" id="pre" style="margin-top:8px"></p></section>`:''}`).join('');
+  const row=(k,a,i)=>`<div class="ap3"><input data-k="${k}" data-i="${i}" data-f="l" value="${a.l.replace(/"/g,'&quot;')}" placeholder="Libellé" aria-label="Libellé"><input data-k="${k}" data-i="${i}" data-f="v" type="number" step="10" value="${a.v}" aria-label="Montant mensuel"><button type="button" data-act2="del" data-k="${k}" data-i="${i}" aria-label="Supprimer">×</button></div>`;
+  const rows=(k,O)=>S2[k].map((a,i)=>a.o===O?row(k,a,i):'').join('');
+  const add=(k,O,t)=>`<button class="add" type="button" data-act2="add" data-k="${k}" data-o="${O}">${t}</button>`;
+  const cred=`<section class="card cred" id="credcard"><h2>Mensualité du crédit<span id="credst"></span></h2><div class="cbig"><span id="credm"></span> <small>par mois</small></div><div class="mute" style="font-size:.82rem" id="credinfo"></div><label class="chk"><input type="checkbox" id="inc"${INC?' checked':''}> Inclure la mensualité du crédit dans le reste à vivre</label><div class="split"><span><b class="nB"></b> <em id="shk1"></em></span><input type="range" min="0" max="100" step="1" value="${SH.k}" data-sh="k" aria-label="Répartition de la charge du crédit entre les deux personnes"><span><b class="nM"></b> <em id="shk2"></em></span></div><div class="cgrid" id="cgrid"></div><p class="hint" id="pre" style="margin-top:8px"></p></section>`;
+  const col=O=>`<section class="card col"><h2>${OWN(O)}<span id="ct_${O}"></span></h2>${O!=='C'?`<div class="cat first"><h3>Revenus nets après impôts<span id="cs_${O}_rev"></span></h3>${rows('rev',O)}${add('rev',O,'+ Ajouter un revenu')}</div>`:''}${O==='C'?`<div class="splitv"><div class="lbls"><span><b class="nB"></b> <em id="shc1"></em></span><span><b class="nM"></b> <em id="shc2"></em></span></div><input type="range" min="0" max="100" step="1" value="${SH.c}" data-sh="c" aria-label="Répartition des dépenses communes entre les deux personnes"></div>`:''}${O==='C'?'<div class="catgrid">':''}${SEC.slice(1).map(([k,t])=>`<div class="cat"><h3>${t}<span id="cs_${O}_${k}"></span></h3>${rows(k,O)}${add(k,O,'+ Ajouter')}</div>`).join('')}${O==='C'?'</div>':''}</section>`;
+  $('lists').innerHTML=`<div class="duo">${['B','M'].map(col).join('')}</div>${col('C')}${cred}`;
   $('nmB').value=NM.B;$('nmM').value=NM.M;document.querySelectorAll('.nB').forEach(e=>e.textContent=NM.B);document.querySelectorAll('.nM').forEach(e=>e.textContent=NM.M);
 }
 $('nmB').onchange=$('nmM').onchange=e=>{NM[e.target.id==='nmB'?'B':'M']=e.target.value.trim().slice(0,30)||(e.target.id==='nmB'?'Personne 1':'Personne 2');render2();update()};
-$('lists').addEventListener('input',e=>{const t=e.target,d=t.dataset;if(!d.f)return;const a=S2[d.k][d.i];if(d.f==='l')a.l=t.value;else if(d.f==='o')a.o=t.value;else a.v=parseFloat(t.value)||0;update2()});
-$('lists').addEventListener('click',e=>{const d=e.target.dataset;if(!d.act2)return;d.act2==='add'?S2[d.k].push(L('',0,d.k==='rev'?'B':'C')):S2[d.k].splice(+d.i,1);render2();update2()});
+$('lists').addEventListener('input',e=>{const t=e.target,d=t.dataset;if(!d.f)return;const a=S2[d.k][d.i];if(d.f==='l')a.l=t.value;else a.v=parseFloat(t.value)||0;update2()});
+$('lists').addEventListener('click',e=>{const d=e.target.dataset;if(!d.act2)return;d.act2==='add'?S2[d.k].push(L('',0,d.o||(d.k==='rev'?'B':'C'))):S2[d.k].splice(+d.i,1);render2();update2()});
 $('p2').addEventListener('input',e=>{const k=e.target.dataset.sh;if(!k)return;SH[k]=Math.min(100,Math.max(0,parseFloat(e.target.value)||0));
   document.querySelectorAll(`[data-sh="${k}"]`).forEach(x=>{if(x!==e.target)x.value=SH[k]});update();});
 $('lists').addEventListener('change',e=>{if(e.target.id==='inc'){INC=e.target.checked;update2()}});
@@ -216,13 +225,16 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
   $('p1').hidden=b.dataset.t!=='1';$('p2').hidden=b.dataset.t!=='2';update();
 });
 function update2(){
-  SEC.forEach(([k])=>$('st_'+k).textContent=eur(sum(k)));
+  const sub=(k,O)=>S2[k].filter(a=>a.o===O).reduce((t,a)=>t+num(a),0);
+  ['B','M'].forEach(O=>$('cs_'+O+'_rev').textContent=eur(sub('rev',O)));
+  ['B','M','C'].forEach(O=>{let tt=0;SEC.slice(1).forEach(([k])=>{const v=sub(k,O);tt+=v;$(`cs_${O}_${k}`).textContent=eur(v)});$('ct_'+O).textContent='Dépenses '+eur(tt)});
+  $('shc1').textContent=`${+SH.c.toFixed(1)} %`;$('shc2').textContent=`${+(100-SH.c).toFixed(1)} %`;
   const cred=INC?MENS:0,P=calc2(cred),rev=P[0].rev+P[1].rev,tot=P[0].rav+P[1].rav;
   const neg=P.filter(p=>p.rav<0).map(p=>p.n);
   $('rav').innerHTML=`<span class="${tot>=0?'':'ko'}">${eur(tot)}</span>`;
   $('ravsub').textContent=neg.length?`Déficit pour ${neg.join(' et ')}.`:`${pct(rev?tot/rev*100:0)} des revenus du foyer (${eur(rev)}).`;
   $('pp').innerHTML=P.map(p=>{
-    const t=Math.max(p.rev,p.dp+p.cm+p.cr)||1,parts=[['Dépenses perso',p.dp,'#0f766e'],['Part commune',p.cm,'#2b6cb0'],['Crédit',p.cr,'#14212b'],['Reste à vivre',Math.max(0,p.rav),'#d5dce2']];
+    const t=Math.max(p.rev,p.dp+p.cm+p.cr)||1,parts=[['Dépenses perso',p.dp,'#14b8a6'],['Part commune',p.cm,'#60a5fa'],['Crédit',p.cr,'#f59e0b'],['Reste à vivre',Math.max(0,p.rav),'#6b7785']];
     return `<div class="pb"><h3>${p.n}</h3><div class="pv ${p.rav<0?'ko':''}">${eur(p.rav)}</div><div class="mute" style="font-size:.75rem">${pct(p.rev?p.rav/p.rev*100:0)} de ${eur(p.rev)}</div><div class="bar">${parts.filter(x=>x[1]>0).map(([a,v,c])=>`<i style="width:${v/t*100}%;background:${c}" title="${a}"></i>`).join('')}</div><div class="leg">${parts.slice(0,3).map(([a,v,c])=>`<div><i style="background:${c}"></i><span>${a}</span><b>${eur(v)}</b></div>`).join('')}</div></div>`}).join('');
   const sh=[SH.k/100,1-SH.k/100];
   $('credst').textContent=INC?'incluse dans le reste à vivre':'non incluse dans le reste à vivre';
